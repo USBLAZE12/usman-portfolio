@@ -1,0 +1,155 @@
+@import 'tailwindcss';
+@import 'tw-animate-css';
+
+@custom-variant dark (&:is(.dark *));
+
+:root {
+  /* Obsidian + Emerald system */
+  --background: #0a0a0b;
+  --foreground: #ededed;
+
+  --card: #121212;
+  --card-foreground: #ededed;
+
+  --popover: #121212;
+  --popover-foreground: #ededed;
+
+  --primary: #10b981; /* Emerald */
+  --primary-foreground: #0a0a0b;
+
+  --secondary: #1a1a1c;
+  --secondary-foreground: #ededed;
+
+  --muted: #1a1a1c;
+  --muted-foreground: #94a3b8; /* slate-400 */
+
+  --accent: #10b981;
+  --accent-foreground: #0a0a0b;
+
+  --destructive: #ef4444;
+  --destructive-foreground: #fafafa;
+
+  --border: rgba(148, 163, 184, 0.12); /* slate translucent */
+  --input: rgba(148, 163, 184, 0.16);
+  --ring: #10b981;
+
+  --radius: 0.75rem;
+
+  /* Custom brand tokens */
+  --obsidian: #121212;
+  --obsidian-deep: #0a0a0b;
+  --emerald: #10b981;
+  --emerald-glow: rgba(16, 185, 129, 0.35);
+  --slate-muted: #64748b;
+}
+
+@theme inline {
+  --font-sans: 'Geist', 'Geist Fallback';
+  --font-mono: 'Geist Mono', 'Geist Mono Fallback';
+
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--accent);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-obsidian: var(--obsidian);
+  --color-obsidian-deep: var(--obsidian-deep);
+  --color-emerald-brand: var(--emerald);
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+}
+
+@layer base {
+  * {
+    @apply border-border outline-ring/50;
+  }
+  html,
+  body {
+    @apply bg-background text-foreground;
+    background-color: var(--obsidian-deep);
+  }
+
+  /* Hide default cursor when custom cursor is active (desktop only) */
+  @media (hover: hover) and (pointer: fine) {
+    html.has-custom-cursor,
+    html.has-custom-cursor * {
+      cursor: none !important;
+    }
+  }
+}
+
+@layer utilities {
+  .glass {
+    background: rgba(18, 18, 18, 0.55);
+    backdrop-filter: blur(16px) saturate(140%);
+    -webkit-backdrop-filter: blur(16px) saturate(140%);
+    border: 1px solid rgba(148, 163, 184, 0.12);
+  }
+
+  .glass-strong {
+    background: rgba(10, 10, 11, 0.7);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+    border: 1px solid rgba(148, 163, 184, 0.14);
+  }
+
+  .text-emerald-brand {
+    color: var(--emerald);
+  }
+
+  .bg-emerald-brand {
+    background-color: var(--emerald);
+  }
+
+  .border-emerald-brand {
+    border-color: var(--emerald);
+  }
+
+  .glow-emerald {
+    box-shadow: 0 0 40px -10px var(--emerald-glow);
+  }
+
+  .grid-bg {
+    background-image:
+      linear-gradient(rgba(148, 163, 184, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(148, 163, 184, 0.05) 1px, transparent 1px);
+    background-size: 56px 56px;
+  }
+
+  .noise::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.04;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+
+  /* Marquee */
+  @keyframes marquee {
+    0% { transform: translateX(0); }
+    100% { transform: translateX(-50%); }
+  }
+  .animate-marquee {
+    animation: marquee 30s linear infinite;
+  }
+}
