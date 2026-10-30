@@ -1,136 +1,100 @@
 "use client"
 
 import { motion } from "framer-motion"
-import { LayoutTemplate, GraduationCap, Gauge } from "lucide-react"
-import { Reveal, staggerContainer, staggerItem } from "./reveal"
+import { Sparkles } from "lucide-react"
+import { MagneticButton } from "./magnetic-button"
+import { staggerContainer, staggerItem } from "./reveal"
 
-const cards = [
-  {
-    icon: LayoutTemplate,
-    title: "WordPress & Elementor",
-    tag: "CMS EXPERT",
-    description:
-      "Specialized in advanced WordPress architecture. Custom themes, performance-tuned page builds with Elementor Pro, and bespoke functionality.",
-    bullets: ["Custom Themes", "Elementor Pro", "Performance Tuned"],
-  },
-  {
-    icon: GraduationCap,
-    title: "LMS & E-Learning",
-    tag: "LMS ARCHITECT",
-    description:
-      "Expertise in TutorLMS & Learndash. End-to-end student portals, course architecture, quizzes, certificates, and payment integration.",
-    bullets: ["TutorLMS", "Learndash", "Student Portals"],
-  },
-  {
-    icon: Gauge,
-    title: "Performance & SEO",
-    tag: "PERFORMANCE",
-    description:
-      "90+ PageSpeed Insights enthusiast. Core Web Vitals optimization, technical SEO, schema, and a relentless focus on time-to-first-byte.",
-    bullets: ["90+ PageSpeed", "Core Web Vitals", "Technical SEO"],
-  },
-]
-
-export function Expertise() {
+export function Hero() {
   return (
-    <section id="expertise" className="relative px-4 py-24 sm:py-32">
-      <div className="mx-auto max-w-6xl">
-        <Reveal>
-          <SectionHeader
-            label="01 — Expertise"
-            title="A focused stack. Premium output."
-            description="Three disciplines. Compounded for results."
-          />
-        </Reveal>
+    <section
+      id="top"
+      className="relative isolate flex min-h-[100svh] items-center justify-center overflow-hidden px-4 pb-16 pt-32"
+    >
+      <div aria-hidden className="absolute inset-0 grid-bg opacity-80" />
+
+      <motion.div
+        variants={staggerContainer}
+        initial="hidden"
+        animate="visible"
+        className="relative z-10 mx-auto flex w-full max-w-6xl flex-col items-center text-center"
+      >
+        <motion.div variants={staggerItem} className="mb-8">
+          <div className="glass inline-flex items-center gap-2 rounded-full px-3 py-1.5">
+            <span className="relative flex h-2.5 w-2.5 items-center justify-center">
+              <span className="absolute h-full w-full rounded-full bg-[#8e6e4a]/25" />
+              <span className="relative h-2 w-2 rounded-full bg-[#8e6e4a]" />
+            </span>
+            <span className="font-mono text-[10px] tracking-[0.22em] text-[#615b57] uppercase">
+              Available for Q2 2026
+            </span>
+          </div>
+        </motion.div>
+
+        <motion.h1
+          variants={staggerItem}
+          className="max-w-5xl text-balance text-5xl font-medium leading-[0.9] tracking-[-0.08em] text-[#171615] sm:text-6xl md:text-7xl lg:text-[7rem]"
+        >
+          Architecting
+          <span className="mt-2 block">premium WordPress</span>
+          <span className="mt-2 block text-[#8e6e4a]">experiences.</span>
+        </motion.h1>
+
+        <motion.p
+          variants={staggerItem}
+          className="mt-7 max-w-2xl text-base leading-relaxed text-[#615b57] sm:text-lg"
+        >
+          From high-converting business sites to complex LMS systems, I build fast,
+          thoughtful, and scalable web experiences designed around product clarity and
+          real-world performance.
+        </motion.p>
 
         <motion.div
-          variants={staggerContainer}
-          initial="hidden"
-          whileInView="visible"
-          viewport={{ once: true, margin: "-100px" }}
-          className="mt-14 grid grid-cols-1 gap-5 md:grid-cols-3"
+          variants={staggerItem}
+          className="mt-10 flex flex-wrap items-center justify-center gap-4"
         >
-          {cards.map((c) => {
-            const Icon = c.icon
-            return (
-              <motion.article
-                key={c.title}
-                variants={staggerItem}
-                whileHover={{ y: -4 }}
-                transition={{ type: "spring", stiffness: 300, damping: 22 }}
-                className="glass group relative flex flex-col gap-5 overflow-hidden rounded-2xl p-7"
-                data-cursor="hover"
-              >
-                {/* hover glow */}
-                <div
-                  aria-hidden
-                  className="pointer-events-none absolute -inset-px rounded-2xl opacity-0 transition-opacity duration-500 group-hover:opacity-100"
-                  style={{
-                    background:
-                      "radial-gradient(400px circle at var(--mx, 50%) var(--my, 0%), rgba(16,185,129,0.10), transparent 40%)",
-                  }}
-                />
-
-                <div className="flex items-center justify-between">
-                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-xl border border-emerald-brand/20 bg-emerald-brand/10 text-emerald-brand">
-                    <Icon className="h-5 w-5" strokeWidth={1.6} />
-                  </span>
-                  <span className="font-mono text-[10px] tracking-widest text-muted-foreground">
-                    {c.tag}
-                  </span>
-                </div>
-
-                <div>
-                  <h3 className="text-xl font-medium tracking-tight text-foreground">
-                    {c.title}
-                  </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground">
-                    {c.description}
-                  </p>
-                </div>
-
-                <ul className="mt-auto flex flex-wrap gap-2 pt-2">
-                  {c.bullets.map((b) => (
-                    <li
-                      key={b}
-                      className="rounded-full border border-border bg-[#0d0d0e] px-3 py-1 text-xs text-muted-foreground"
-                    >
-                      {b}
-                    </li>
-                  ))}
-                </ul>
-              </motion.article>
-            )
-          })}
+          <MagneticButton
+            href="https://www.fiverr.com/wp_builds01"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="bg-[#171615] text-[#f8f5f0] hover:bg-[#8e6e4a]"
+          >
+            Hire me on Fiverr
+          </MagneticButton>
+          <a
+            href="#work"
+            data-cursor="hover"
+            className="group inline-flex items-center gap-2 rounded-full border border-[#171615]/12 bg-[#fbfaf7] px-6 py-3.5 text-sm font-medium text-[#171615] transition-colors hover:border-[#8e6e4a]/30 hover:bg-[#f0e8df]"
+          >
+            <Sparkles className="h-4 w-4 text-[#8e6e4a]" />
+            View flagship project
+          </a>
         </motion.div>
-      </div>
-    </section>
-  )
-}
 
-export function SectionHeader({
-  label,
-  title,
-  description,
-}: {
-  label: string
-  title: string
-  description?: string
-}) {
-  return (
-    <div className="flex flex-col gap-4">
-      <p className="font-mono text-xs tracking-widest text-emerald-brand">{label}</p>
-      <div className="flex flex-col items-start justify-between gap-4 md:flex-row md:items-end">
-        <h2 className="max-w-2xl text-balance text-3xl font-medium leading-tight tracking-tight sm:text-4xl md:text-5xl">
-          {title}
-        </h2>
-        {description && (
-          <p className="max-w-sm text-pretty text-sm leading-relaxed text-muted-foreground">
-            {description}
-          </p>
-        )}
-      </div>
-      <div className="mt-2 h-px w-full bg-gradient-to-r from-border via-border to-transparent" />
-    </div>
+        <motion.div
+          variants={staggerItem}
+          className="mt-14 grid w-full max-w-3xl grid-cols-1 gap-3 border border-[#171615]/10 bg-[#f9f6f2] p-3 sm:grid-cols-3"
+        >
+          {[
+            { label: "PageSpeed", value: "90+", sub: "Mobile & desktop" },
+            { label: "LMS builds", value: "20+", sub: "TutorLMS / LearnDash" },
+            { label: "Years", value: "5+", sub: "WordPress architecture" },
+          ].map((stat) => (
+            <div
+              key={stat.label}
+              className="border border-[#171615]/10 bg-[#fffdf9] px-4 py-5 text-left"
+            >
+              <p className="font-mono text-[10px] uppercase tracking-[0.2em] text-[#615b57]">
+                {stat.label}
+              </p>
+              <p className="mt-3 text-3xl font-medium tracking-[-0.06em] text-[#171615]">
+                {stat.value}
+              </p>
+              <p className="mt-1 text-xs text-[#615b57]">{stat.sub}</p>
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </section>
   )
 }

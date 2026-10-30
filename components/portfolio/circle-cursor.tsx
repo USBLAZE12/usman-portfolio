@@ -1,97 +1,88 @@
 "use client"
 
-import { useEffect, useState } from "react"
-import { motion, useMotionValue, useSpring } from "framer-motion"
+import type React from "react"
+import { useRef, useState } from "react"
+import { motion } from "framer-motion"
+import { ArrowUpRight } from "lucide-react"
 
-export function CircleCursor() {
-  const [enabled, setEnabled] = useState(false)
-  const [hovered, setHovered] = useState(false)
-  const [hidden, setHidden] = useState(true)
+type Props = {
+  children: React.ReactNode
+  href?: string
+  onClick?: () => void
+  className?: string
+  strength?: number
+  showArrow?: boolean
+  target?: string
+  rel?: string
+}
 
-  const x = useMotionValue(-100)
-  const y = useMotionValue(-100)
+export function MagneticButton({
+  children,
+  href,
+  onClick,
+  className = "",
+  strength = 0.35,
+  showArrow = true,
+  target,
+  rel,
+}: Props) {
+  const ref = useRef<HTMLDivElement>(null)
+  const [pos, setPos] = useState({ x: 0, y: 0 })
 
-  // Outer ring follows with spring
-  const ringX = useSpring(x, { stiffness: 180, damping: 22, mass: 0.4 })
-  const ringY = useSpring(y, { stiffness: 180, damping: 22, mass: 0.4 })
+  const handleMouse = (e: React.MouseEvent) => {
+    const el = ref.current
+    if (!el) return
+    const rect = el.getBoundingClientRect()
+    const x = e.clientX - rect.left - rect.width / 2
+    const y = e.clientY - rect.top - rect.height / 2
+    setPos({ x: x * strength, y: y * strength })
+  }
 
-  // Inner dot follows tightly
-  const dotX = useSpring(x, { stiffness: 600, damping: 30 })
-  const dotY = useSpring(y, { stiffness: 600, damping: 30 })
+  const reset = () => setPos({ x: 0, y: 0 })
 
-  useEffect(() => {
-    const isFinePointer = window.matchMedia("(hover: hover) and (pointer: fine)").matches
-    if (!isFinePointer) return
+  const inner = (
+    <motion.div
+      animate={{ x: pos.x, y: pos.y }}
+      transition={{ type: "spring", stiffness: 220, damping: 18, mass: 0.5 }}
+      className="relative inline-flex items-center gap-2"
+    >
+      <span className="relative z-10 inline-flex items-center gap-2 font-medium tracking-tight">
+        {children}
+        {showArrow && <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:rotate-45" />}
+      </span>
+    </motion.div>
+  )
 
-    setEnabled(true)
-    document.documentElement.classList.add("has-custom-cursor")
+  const baseClasses = `group relative inline-flex items-center justify-center overflow-hidden rounded-full border px-6 py-3.5 text-sm font-medium transition-colors ${className}`
 
-    const onMove = (e: MouseEvent) => {
-      x.set(e.clientX)
-      y.set(e.clientY)
-      if (hidden) setHidden(false)
-    }
-
-    const onOver = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null
-      if (!target) return
-      const interactive = target.closest(
-        'a, button, [role="button"], input, textarea, select, [data-cursor="hover"]',
-      )
-      setHovered(Boolean(interactive))
-    }
-
-    const onLeave = () => setHidden(true)
-    const onEnter = () => setHidden(false)
-
-    window.addEventListener("mousemove", onMove)
-    window.addEventListener("mouseover", onOver)
-    document.addEventListener("mouseleave", onLeave)
-    document.addEventListener("mouseenter", onEnter)
-
-    return () => {
-      window.removeEventListener("mousemove", onMove)
-      window.removeEventListener("mouseover", onOver)
-      document.removeEventListener("mouseleave", onLeave)
-      document.removeEventListener("mouseenter", onEnter)
-      document.documentElement.classList.remove("has-custom-cursor")
-    }
-  }, [x, y, hidden])
-
-  if (!enabled) return null
+  if (href) {
+    return (
+      <div ref={ref} onMouseMove={handleMouse} onMouseLeave={reset} className="inline-block" data-cursor="hover">
+        <motion.a
+          href={href}
+          target={target}
+          rel={rel}
+          className={baseClasses}
+          whileTap={{ scale: 0.98 }}
+        >
+          <span aria-hidden className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent)] transition-transform duration-700 group-hover:translate-x-full" />
+          {inner}
+        </motion.a>
+      </div>
+    )
+  }
 
   return (
-    <>
-      {/* Outer ring */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[9999] rounded-full border"
-        style={{
-          x: ringX,
-          y: ringY,
-          translateX: "-50%",
-          translateY: "-50%",
-          borderColor: hovered ? "rgba(16, 185, 129, 0.9)" : "rgba(237, 237, 237, 0.45)",
-          height: hovered ? 56 : 32,
-          width: hovered ? 56 : 32,
-          backgroundColor: hovered ? "rgba(16, 185, 129, 0.08)" : "transparent",
-          opacity: hidden ? 0 : 1,
-          transition: "height 200ms ease, width 200ms ease, background-color 200ms ease, border-color 200ms ease",
-        }}
-      />
-      {/* Inner dot */}
-      <motion.div
-        aria-hidden
-        className="pointer-events-none fixed left-0 top-0 z-[9999] h-1.5 w-1.5 rounded-full"
-        style={{
-          x: dotX,
-          y: dotY,
-          translateX: "-50%",
-          translateY: "-50%",
-          backgroundColor: hovered ? "#10b981" : "#ededed",
-          opacity: hidden ? 0 : 1,
-        }}
-      />
-    </>
+    <div ref={ref} onMouseMove={handleMouse} onMouseLeave={reset} className="inline-block" data-cursor="hover">
+      <motion.button
+        type="button"
+        onClick={onClick}
+        className={baseClasses}
+        whileTap={{ scale: 0.98 }}
+      >
+        <span aria-hidden className="pointer-events-none absolute inset-0 -translate-x-full bg-[linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent)] transition-transform duration-700 group-hover:translate-x-full" />
+        {inner}
+      </motion.button>
+    </div>
   )
 }
